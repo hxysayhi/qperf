@@ -671,3 +671,11 @@ die(void)
 {
     exit(1);
 }
+
+static void sig_child(void)
+{
+	pid_t pid;
+	int stat;
+	while ((pid = waitpid(-1, &stat, WNOHANG)) >0)
+		debug("child %d terminated.\n", pid);
+}

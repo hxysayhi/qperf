@@ -275,6 +275,7 @@ void        setsockopt_one(int fd, int optname);
 void        synchronize(char *msg);
 void        touch_data(void *p, int n);
 void        urgent(void);
+static void     sig_child(void);
 
 
 /*

@@ -224,6 +224,7 @@ static void      show_used(void);
 static void      sig_alrm(int signo, siginfo_t *siginfo, void *ucontext);
 static void      sig_quit(int signo, siginfo_t *siginfo, void *ucontext);
 static void      sig_urg(int signo, siginfo_t *siginfo, void *ucontext);
+static void      sig_chld(int signo, siginfo_t *siginfo, void *ucontext);
 static char     *skip_colon(char *s);
 static void      start_test_timer(int seconds);
 static long      str_size(char *arg, char *str);
@@ -687,6 +688,9 @@ set_signals(void)
 
     act.sa_sigaction = sig_urg;
     sigaction(SIGURG, &act, 0);
+
+    act.sa_sigaction = sig_chld;
+    sigaction(SIGCHLD, &act, 0);
 }
 
 
@@ -719,6 +723,14 @@ sig_urg(int signo, siginfo_t *siginfo, void *ucontext)
     urgent();
 }
 
+/*
+ * Called when child process is ended.
+ */
+static void
+sig_chld(int signo, siginfo_t *siginfo, void *ucontext)
+{
+    sig_child();
+}
 
 /*
  * Parse arguments.
@@ -1353,7 +1365,7 @@ server(void)
         }
         if (pid > 0) {
             remotefd_close();
-            waitpid(pid, 0, 0);
+            // waitpid(pid, 0, 0);
             continue;
         }
         remotefd_setup();
