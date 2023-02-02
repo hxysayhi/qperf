@@ -672,7 +672,7 @@ die(void)
     exit(1);
 }
 
-static void sig_child(void)
+void sig_child(void)
 {
 	pid_t pid;
 	int stat;
